@@ -1,0 +1,68 @@
+body{
+    background-color: #222933;
+}
+.card{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    padding: 10px;
+    justify-content: space-between !important;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+}
+.card-img{
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    transition: all .7s ease-in-out;
+    background-color: transparent;
+
+}
+.card-img:hover{
+    transform: scale(1.1);
+}
+
+.card-img-details{
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    background-color: transparent;
+    color: white!important;
+    box-shadow:  2px 2px 9px 1px #a2958a !important; 
+}
+.hidden-description {
+    display: none;
+  }
+  
+  .description {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .learn-more-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .learn-more-button:hover {
+    background-color: #3e8e41;
+  }
+
+  .datepicker{
+    border: none;
+  height: 30px;
+  width: 190px;
+  border-radius: 5px;
+  }
+  .datepicker::placeholder{
+    color: red;
+  }
+
+  input[type=date]:invalid::-webkit-datetime-edit {
+    color: #999;
+}
