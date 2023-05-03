@@ -9,37 +9,48 @@ const Nav = ({ book }) => {
   const { Option } = Select;
   const uniqueCategories = [...new Set(data.map((book) => book.categories[0]))];
   const [filteredData, setFilteredData] = useState(data);
+  const [Price, setPrice] = useState('');
+  const [Date, setDate] = useState('');
+  const [Categories, setCategories] = useState('');
+
 
   ///////// FilterByCategories ///////////
-  const handleCategoryChange = (value) => {
-    if (value) {
-      const filtered = data.filter((book) => book.categories.includes(value));
-      console.log(filtered, "filteredData");
-      setFilteredData(filtered);
-    } else {
+  const handleCategoryChange = (value,event) => {
+    // setMessage(event.target.value)
+    // if (value) {
+    //   const filtered = data.filter((book) => book.categories.includes(value));
+    //   console.log(filtered, "filteredData");
+    //   setFilteredData(filtered);
+    // } else {
+    //   setFilteredData(data);
+    // }
+    setCategories(value);
+    if (value === '') {
       setFilteredData(data);
-    }
+    } else {
+      const filtered = data.filter((book) => book.categories.includes(value));
+      setFilteredData(filtered);
+    } 
   };
 
 
   ///////// FilterByDate //////////
   const handleDateChange = (event) => {
+    setDate(event.target.value)
     if (event.target.value === '') {
       setFilteredData(data);
       return;
     }
     const filtered = data?.filter(e => e.published.$date.slice(0, 10) === event.target.value ? e.published.$date : null);
     setFilteredData(filtered);
-    // if (filtered && filtered?.length === 0) {
-    //   setFilteredData(null);
-    //   //  setFilteredData([]);
-    // } else {
-    //   setFilteredData(filtered);
-    // }
+
+ 
+
   };
 
   ////////// FilterByPrice ///////////
   const handlePriceFilter = (event) => {
+    setPrice(event.target.value)
     const priceFilter = parseFloat(event.target.value);
     if (isNaN(priceFilter)) {
       setFilteredData(data);
@@ -53,7 +64,10 @@ const Nav = ({ book }) => {
   ////////// ClearFilter ///////////
   const resetFilters = () => {
     setFilteredData(data);
-    console.log("removed")
+    setCategories('');
+    setPrice('');
+    setDate('');
+
   }
 
 
@@ -61,18 +75,18 @@ const Nav = ({ book }) => {
     <div style={{ width: "80%", margin: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", width: "83%", marginLeft: "10%", background: "lightGray", padding: "10px", borderRadius: "10px" }}>
         <Space>
-          <input className='datepicker' type="date" onChange={handleDateChange} />
-          {/* {filteredData? (<input className='datepicker' type="date" onChange={handleDateChange} />):(<p>no book available</p>)} */}
+          <input value={Date} className='datepicker' type="date" onChange={handleDateChange} />
         </Space>
-        <Input onChange={handlePriceFilter} style={{ width: 200 }} placeholder='Search-price' />
+        <Input value={Price} onChange={handlePriceFilter} style={{ width: 200 }} placeholder='Search-price' />
         <Select
           onChange={handleCategoryChange}
           style={{ width: 220 }}
           defaultValue="-- Select a category --"
+          value={Categories}
         >
           <Option value="">-- Select a category --</Option>
           {uniqueCategories.map((category) => (
-            <Option key={category}>{category}</Option>
+            <Option value={category} key={category}>{category}</Option>
           ))}
         </Select>
         <Button data-testid='button' onClick={resetFilters}>Reset Filters</Button>
