@@ -1,15 +1,14 @@
-import { useState } from 'react';
-import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
+import { useState, useEffect } from 'react';
+import { Button, Card, Input, Select, Space } from 'antd';
 import data from '../data';
 import "../style/index.css"
 import { Link } from 'react-router-dom';
 
 
-const Nav = () => {
+const Nav = ({ book }) => {
   const { Option } = Select;
   const uniqueCategories = [...new Set(data.map((book) => book.categories[0]))];
   const [filteredData, setFilteredData] = useState(data);
-
 
   ///////// FilterByCategories ///////////
   const handleCategoryChange = (value) => {
@@ -25,16 +24,29 @@ const Nav = () => {
 
   ///////// FilterByDate //////////
   const handleDateChange = (event) => {
-    const filtered = data?.filter(e => e.published.$date.slice(0, 10) === event.target.value ? e.published.$date : null)
+    if (event.target.value === '') {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = data?.filter(e => e.published.$date.slice(0, 10) === event.target.value ? e.published.$date : null);
     setFilteredData(filtered);
+    // if (filtered && filtered?.length === 0) {
+    //   setFilteredData(null);
+    //   //  setFilteredData([]);
+    // } else {
+    //   setFilteredData(filtered);
+    // }
   };
 
   ////////// FilterByPrice ///////////
   const handlePriceFilter = (event) => {
     const priceFilter = parseFloat(event.target.value);
-    const filtered = data.filter((book) => book.published.price === priceFilter);
-    setFilteredData(filtered);
-
+    if (isNaN(priceFilter)) {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter((book) => book.published.price === priceFilter);
+      setFilteredData(filtered);
+    }
   };
 
 
@@ -45,15 +57,12 @@ const Nav = () => {
   }
 
 
-
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", width: "83%", marginLeft: "10%", background: "lightGray", padding: "10px", borderRadius: "10px" }}>
-        <Space direction="vertical" size={12}>
-          {/* <DatePicker onChange={handleDateChange} /> */}
-          {/* <DatePicker onChange={handleDateChange} /> */}
-          {/* <DatePicker onChange={handleDateChange} defaultValue={dayjs('2015/01/01', dateFormat)} format={dateFormat} /> */}
+        <Space>
           <input className='datepicker' type="date" onChange={handleDateChange} />
+          {/* {filteredData? (<input className='datepicker' type="date" onChange={handleDateChange} />):(<p>no book available</p>)} */}
         </Space>
         <Input onChange={handlePriceFilter} style={{ width: 200 }} placeholder='Search-price' />
         <Select
@@ -87,30 +96,21 @@ const Nav = () => {
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <img src={item.thumbnailUrl} alt="No Images" style={{ display: "flex", justifyContent: "center", marginLeft: "30px", width: "200px", height: "250px" }} />
-                  <p style={{ display: "flex", justifyContent: "center", color: "white" }}>{item.title}</p>
-                  <p style={{ color: "white" }}><span style={{ fontWeight: "bold", color: "white" }}>Author:</span> {item.authors}</p>
+                  <p className='author' style={{ display: "flex", justifyContent: "center", color: "white" }}>{item.title}</p>
+                  <p className='author' style={{ color: "white" }}><span style={{ fontWeight: "bold", color: "white", width: " max-content" }}>Author:</span> {item.authors}</p>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <p style={{ color: "white" }}> <span style={{ fontWeight: "bold", color: "white" }}>Categories:</span> {item.categories}</p>
                     <p style={{ fontWeight: "bold", color: "white" }}>${item.published.price}</p>
                   </div>
                 </Link>
-
-                <div className="description-container">
-                  {/* <h4>Show More/Show Less</h4>
-                    {showFullDescription ? <h4>{item.description}</p> : <p>{item.shortDescription}</p>}
-                    {item.description && (
-                      <button className="learn-more-button" onClick={toggleDescription}>
-                        {showFullDescription ? 'Show Less' : 'Show More'}
-                      </button>
-                    )} */}
-                </div>
-
               </Card>
             ))}
           </div>
         )}
       </div>
     </div>
+
+
   );
 };
 
